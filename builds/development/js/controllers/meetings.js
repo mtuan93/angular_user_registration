@@ -14,4 +14,8 @@ myApp.controller('MeetingsController', function($scope, $firebase) {
 		});
 	} //addmeeting
 
+	$scope.deleteMeeting = function(key) {
+		meetings.$remove(key);
+	}
+
 }); //MeetingsController
