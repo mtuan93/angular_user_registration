@@ -1,7 +1,17 @@
-myApp.controller('RegistrationController', function($scope, $location){
+myApp.controller('RegistrationController', function($scope, $firebaseSimpleLogin, $location){
 	
+	var ref = new Firebase('https://mtuan93.firebaseio.com/');
+	var simpleLogin = $firebaseSimpleLogin(ref);
+
 	$scope.login = function() {
-		$location.path('/meetings');
+		simpleLogin.$login('password', {
+			email: $scope.user.email,
+			password: $scope.user.password
+		}).then(function(user) {
+			$location.path('/meetings');
+		}, function(error) {
+			$scope.message = error.toString();  
+		});
 	}//login
 
 	$scope.register = function() {
