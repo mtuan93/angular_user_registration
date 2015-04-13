@@ -8,9 +8,15 @@ myApp.controller('RegistrationController',
 		}, function(error) {
 			$scope.message = error.toString();  
 		});
-	}//login
+	};//login
 
 	$scope.register = function() {
-		$location.path('/meetings');
-	}
+		Authentication.register($scope.user)
+		.then(function(user) {
+			Authentication.login($scope.user);
+			$location.path('/meetings');
+		}, function(error) {
+			$scope.message = error.toString();
+		});
+	};//register
 });//Registration Controller

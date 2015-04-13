@@ -1,14 +1,17 @@
 <section class="register">
-	<form name="myform" novalidate
-		ng-submit="register()">
+	<form name="myform"
+		ng-submit="register()" novalidate>
 		<h1>Register</h1>
 		<p>To access site features</p>
+		
+		<p class="error formerror"
+			ng-show="message">{{message}}</p>
 
 		<input type="firstname" name="firstname" placeholder="First Name"
 			ng-model="user.firstname" ng-required="true">
 		<p class="error validationerror" 
 			ng-show="myform.firstname.$invalid && myform.firstname.$touched">First Name is required</p>
-
+ 
 		<input type="lastname" name="lastname" placeholder="Last Name"
 			ng-model="user.lastname" ng-required="true">
 		<p class="error validationerror" 
