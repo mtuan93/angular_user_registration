@@ -9,7 +9,11 @@ myApp.factory('Authentication', function($firebase, $firebaseSimpleLogin, FIREBA
 				email: user.email,
 				password: user.password
 			});
-		} //login
+		}, //login
+
+		logout: function() {
+			return simpleLogin.$logout();
+		}
 	} //myObject
 
 	return myObject;
