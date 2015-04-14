@@ -1,6 +1,6 @@
 myApp.controller('StatusController', function(
-	$scope, $rootScope, $firebaseSimpleLogin, $location,
-	Authentication) {
+	$scope, $rootScope, $firebaseSimpleLogin, $location, 
+	$firebase, FIREBASE_URL, Authentication) {
 
 	$scope.logout = function() {
 		Authentication.logout();
@@ -8,10 +8,15 @@ myApp.controller('StatusController', function(
 	}
 
 	$rootScope.$on('$firebaseSimpleLogin:login', function(e, authUser) {
-		$scope.userEmail = authUser.email;
+		var ref = new Firebase(FIREBASE_URL + '/users/' + authUser.uid);
+		var user = $firebase(ref).$asObject();
+
+		user.$loaded().then(function() {
+			$rootScope.currentUser = user;
+		});
 	});
 
 	$rootScope.$on('$firebaseSimpleLogin:logout', function(e, authUser) {
-		$scope.userEmail = null;
+		$rootScope.currentUser = null;
 	});
 });
