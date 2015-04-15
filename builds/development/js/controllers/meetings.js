@@ -1,21 +1,34 @@
-myApp.controller('MeetingsController', function($scope, $firebase) {
+myApp.controller('MeetingsController', 
+	function($scope, $rootScope, $firebase) {
 
 	var ref = new Firebase('https://mtuan93.firebaseio.com/meetings');
-	var meetings = $firebase(ref);
+	var meetingsInfo = $firebase(ref);
+	var meetingsObj = meetingsInfo.$asObject();
+	var meetingsArray = meetingsInfo.$asArray();
 
-	$scope.meetings = meetings.$asObject();
+	meetingsObj.$loaded().then(function() {
+		$scope.meetings = meetingsObj;
+	});
+
+	meetingsArray.$loaded().then(function() {
+		$rootScope.howManyMeetings = meetingsArray.length;
+	});
+
+	meetingsArray.$watch(function(event) {
+		$rootScope.howManyMeetings = meetingsArray.length;
+	});
 
 	$scope.addMeeting = function() {
-		meetings.$push({
+		meetingsInfo.$push({
 			name: $scope.meetingname,
 			date: Firebase.ServerValue.TIMESTAMP
 		}).then(function() {
 			$scope.meetingname = "";
 		});
-	} //addmeeting
+	}; //addmeeting
 
 	$scope.deleteMeeting = function(key) {
-		meetings.$remove(key);
-	}
+		meetingsInfo.$remove(key);
+	};
 
 }); //MeetingsController
