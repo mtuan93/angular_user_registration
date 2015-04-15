@@ -26,7 +26,7 @@
 </header>
 <div class="page">
   <div class="userinfo"
-    ng-controller="StatusController" ng-show="currentUser">
+    ng-controller="StatusController" ng-show="signedIn()">
       <span class="user">Hi {{currentUser.firstname}}</span>
       <a href="#/" ng-click="logout()">Logout</a>
   </div>
