@@ -1,34 +1,46 @@
 myApp.controller('MeetingsController', 
-	function($scope, $rootScope, $firebase) {
+	function($scope, $rootScope, $firebase, $firebaseSimpleLogin,
+	 FIREBASE_URL) {
 
-	var ref = new Firebase('https://mtuan93.firebaseio.com/meetings');
-	var meetingsInfo = $firebase(ref);
-	var meetingsObj = meetingsInfo.$asObject();
-	var meetingsArray = meetingsInfo.$asArray();
+	var ref = new Firebase(FIREBASE_URL);
+	var simpleLogin = $firebaseSimpleLogin(ref);
 
-	meetingsObj.$loaded().then(function() {
-		$scope.meetings = meetingsObj;
-	});
+	simpleLogin.$getCurrentUser().then(function(authUser) {
 
-	meetingsArray.$loaded().then(function() {
-		$rootScope.howManyMeetings = meetingsArray.length;
-	});
+		if(authUser !== null)
+		{
+			var ref = new Firebase(FIREBASE_URL + '/users/' +
+					authUser.uid + '/meetings');
+			var meetingsInfo = $firebase(ref);
+			var meetingsObj = meetingsInfo.$asObject();
+			var meetingsArray = meetingsInfo.$asArray();
 
-	meetingsArray.$watch(function(event) {
-		$rootScope.howManyMeetings = meetingsArray.length;
-	});
+			meetingsObj.$loaded().then(function() {
+				$scope.meetings = meetingsObj;
+			});
 
-	$scope.addMeeting = function() {
-		meetingsInfo.$push({
-			name: $scope.meetingname,
-			date: Firebase.ServerValue.TIMESTAMP
-		}).then(function() {
-			$scope.meetingname = "";
-		});
-	}; //addmeeting
+			meetingsArray.$loaded().then(function() {
+				$rootScope.howManyMeetings = meetingsArray.length;
+			});
 
-	$scope.deleteMeeting = function(key) {
-		meetingsInfo.$remove(key);
-	};
+			meetingsArray.$watch(function(event) {
+				$rootScope.howManyMeetings = meetingsArray.length;
+			});
+
+			$scope.addMeeting = function() {
+				meetingsInfo.$push({
+					name: $scope.meetingname,
+					date: Firebase.ServerValue.TIMESTAMP
+				}).then(function() {
+					$scope.meetingname = "";
+				});
+			}; //addmeeting
+
+			$scope.deleteMeeting = function(key) {
+				meetingsInfo.$remove(key);
+			};
+		}
+
+	}); //get current user
 
 }); //MeetingsController
