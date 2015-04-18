@@ -3,6 +3,8 @@ myApp.controller('CheckInsController', function($scope, $rootScope,
 
 	$scope.whichmeeting = $routeParams.mId;	
 	$scope.whichuser = $routeParams.uId;
+	$scope.order = "firstname";
+	$scope.direction = "";
 	
 	var ref = new Firebase(FIREBASE_URL + '/users/' + $scope.whichuser + 
 			'/meetings/' + $scope.whichmeeting + '/checkins');
